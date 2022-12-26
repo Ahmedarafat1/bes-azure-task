@@ -1,0 +1,29 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+
+
+steps:
+# - task: Bash@3
+#   inputs:
+#     targetType: 'inline'
+#     script: 'cd /app'
+
+- task: Kubernetes@1
+  displayName: deploy
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: 'Azure subscription 1(7bd61c18-776a-415c-be12-5cf9e3cf04d7)'
+    azureResourceGroup: 'test-arafat-rg'
+    kubernetesCluster: 'arafat-aks-cluster'
+    command: 'apply'
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Azure Container Registry'

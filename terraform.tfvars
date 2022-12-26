@@ -1,0 +1,8 @@
+rgname                 = "test-arafat-rg"
+location               = "canadacentral"
+# subscription_id = "7bd61c18-776a-415c-be12-5cf9e3cf04d7 "
+# serviceprinciple_id = "6d12c134-bca2-45fe-8432-79ff7bbb627c"
+# serviceprinciple_key = "gTe8Q~5E12XbJybuiESTu8PrqPjWDJOg_3NM5ajl"
+# tenant_id = "fc5c3a8c-573c-4f49-900e-65ee41a973d5"
+service_principal_name = "arafat-spn"
+keyvault_name          = "arafat-kv"

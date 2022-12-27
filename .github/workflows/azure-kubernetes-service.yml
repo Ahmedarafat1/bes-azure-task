@@ -1,53 +1,44 @@
-
-name: Build and deploy an app to AKS
+name: PHP
 
 on:
-  push:
-    branches: ["main"]
-  workflow_dispatch:
-
-env:
-
-  ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
-  ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
-  RESOURCE_GROUP: "test-arafat-rg"
-  CLUSTER_NAME: "arafat-aks-cluster"
-  DEPLOYMENT_MANIFEST_PATH: "./php.yaml"
-
+  pull_request:
+   branches:
+     - main 
+   tags:
+     - v1
+      
 jobs:
+  build:
 
-  deploy:
-    permissions:
-      actions: read
-      contents: read
-      id-token: write
     runs-on: ubuntu-latest
+
     steps:
-      # Checks out the repository this file is in
-      - uses: actions/checkout@v3
+    - uses: actions/checkout@v1
+    - name: Az AKS login
+      run: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+        az login --service-principal -u c909cd46-24c4-46ba-b9dc-854427f9ca6e -p MU68Q~98u4NAwZLcT6mqFj5vQAhDg0g45QZF_cH0 --tenant fc5c3a8c-573c-4f49-900e-65ee41a973d5
+        az account set --subscription 7bd61c18-776a-415c-be12-5cf9e3cf04d7
+        az aks get-credentials --resource-group test-arafat-rg --name arafat-aks-cluster
+        az account set --subscription 7bd61c18-776a-415c-be12-5cf9e3cf04d7
 
-      # Logs in with your Azure credentials
-      - name: Azure login
-        uses: azure/login@v1.4.6
-        with:
-          client-id: ${{ secrets.AZURE_AD_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_AD_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Retrieves your Azure Kubernetes Service cluster's kubeconfig file
-      - name: Get K8s context
-        uses: azure/aks-set-context@v3
-        with:
-          resource-group: ${{ env.RESOURCE_GROUP }}
-          cluster-name: ${{ env.CLUSTER_NAME }}
+    - uses: actions/checkout@v1
+    - name: K8s Configuration
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ca-certificates curl
+        sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+        sudo apt-get update
+        sudo apt-get install -y kubectl
+        kubectl get pods -A
 
-      # Deploys application based on given manifest file
-      - name: Deploys application
-        uses: Azure/k8s-deploy@v4
-        with:
-          action: deploy
-          manifests: ${{ env.DEPLOYMENT_MANIFEST_PATH }}
-          images: |
-            aarafat56/php:latest
+    - uses: actions/checkout@v1
+    - name: Deployment
+      run: |
+        cd ./app
+        kubectl apply -f php.yaml
+        sleep 30 
+        kubectl get svc  | grep web
+

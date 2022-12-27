@@ -19,3 +19,7 @@ jobs:
         echo "${{ secrets.DOCKERPW }}" | docker login -u "aarafat56" --password-stdin
         docker image build -t aarafat56/php:latest .
         docker push aarafat56/php:latest
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+        az account set --subscription 7bd61c18-776a-415c-be12-5cf9e3cf04d7
+        az account set --subscription 7bd61c18-776a-415c-be12-5cf9e3cf04d7
+

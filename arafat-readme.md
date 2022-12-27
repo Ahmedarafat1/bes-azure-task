@@ -1,6 +1,9 @@
 # Solution Brief:
 This repo is an example for CICD solution to build and deploy you application over Azure kubernetes service using terraform as Iaas and github actions as a cicd tool.
 
+## Architecture
+
+
 ## Application
 
 Simple HTTP service  has a `/live` endpoint. 

@@ -1,62 +1,31 @@
-name: 'Terraform'
+name: Build and deploy an app to AKS
 
 on:
   push:
     branches:
     - main
   pull_request:
-
+      
 jobs:
-  terraform:
-    name: 'Terraform'
-    env:
-      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
-    runs-on: ubuntu-latest
-    environment: dev
+  build:
 
-    defaults:
-      run:
-        shell: bash
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+    - uses: actions/checkout@v1
+    - name: Az AKS login
+      run: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+        az login --service-principal -u c909cd46-24c4-46ba-b9dc-854427f9ca6e -p MU68Q~98u4NAwZLcT6mqFj5vQAhDg0g45QZF_cH0 --tenant fc5c3a8c-573c-4f49-900e-65ee41a973d5
+        az account set --subscription 7bd61c18-776a-415c-be12-5cf9e3cf04d7
+        az aks get-credentials --resource-group test-arafat-rg --name arafat-aks-cluster
+        az account set --subscription 7bd61c18-776a-415c-be12-5cf9e3cf04d7
 
-    # - name: 'Terraform Format'
-    #   uses: hashicorp/terraform-github-actions@master
-    #   with:
-    #     tf_actions_version: 0.14.8
-    #     tf_actions_subcommand: 'fmt'
-    #     tf_actions_working_dir: "./"
-        
-    - name: 'Terraform Init'
-      uses: hashicorp/terraform-github-actions@master
-      with:
-        tf_actions_version: 0.14.8
-        tf_actions_subcommand: 'init'
-        tf_actions_working_dir: "./"
 
-    - name: 'Terraform Validate'
-      uses: hashicorp/terraform-github-actions@master
-      with:
-        tf_actions_version: 0.14.8
-        tf_actions_subcommand: 'validate'
-        tf_actions_working_dir: "./"
-        
-    - name: 'Terraform Plan'
-      uses: hashicorp/terraform-github-actions@master
-      with:
-        tf_actions_version: 0.14.8
-        tf_actions_subcommand: 'plan'
-        tf_actions_working_dir: "./"
+    - uses: actions/checkout@v1
+    - name: Terraform
+      run: |
+        sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+        terraform init 
+        terraform plan
 
-    # - name: Terraform Apply
-    #   if: github.ref == 'refs/heads/main'
-    #   uses: hashicorp/terraform-github-actions@master
-    #   with:
-    #     tf_actions_version: 0.14.8
-    #     tf_actions_subcommand: 'apply'
-    #     tf_actions_working_dir: "./"

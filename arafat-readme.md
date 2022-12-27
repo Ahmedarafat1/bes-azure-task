@@ -22,6 +22,9 @@ The following responses are possible:
 
 ## Directory tree  
 
+![image](https://user-images.githubusercontent.com/43320775/209651143-b2cee656-5344-4435-b02e-e8aef3d659f0.png)
+
+
 1. ./app contains the manifist files of the lamp stack 
 2. ./app/php contains the code and the docker file
 3. ./github/workflows contains githup actions files 

@@ -16,9 +16,9 @@ jobs:
     - name: Az AKS login
       run: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-        az login --service-principal -u c909cd46-24c4-46ba-b9dc-854427f9ca6e -p MU68Q~98u4NAwZLcT6mqFj5vQAhDg0g45QZF_cH0 --tenant fc5c3a8c-573c-4f49-900e-65ee41a973d5
-        az account set --subscription 7bd61c18-776a-415c-be12-5cf9e3cf04d7
-        az aks get-credentials --resource-group test-arafat-rg --name arafat-aks-cluster
+        az login --service-principal -u 6d12c134-bca2-45fe-8432-79ff7bbb627c -p gTe8Q~5E12XbJybuiESTu8PrqPjWDJOg_3NM5ajl --tenant fc5c3a8c-573c-4f49-900e-65ee41a973d5
+        # az account set --subscription 7bd61c18-776a-415c-be12-5cf9e3cf04d7
+        # az aks get-credentials --resource-group test-arafat-rg --name arafat-aks-cluster
         az account set --subscription 7bd61c18-776a-415c-be12-5cf9e3cf04d7
 
 

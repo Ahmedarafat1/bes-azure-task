@@ -4,8 +4,8 @@ on:
   pull_request:
    branches:
      - main 
-   tags:
-     - v1
+  #  tags:
+  #    - v1
       
 jobs:
   build:

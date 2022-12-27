@@ -1,4 +1,4 @@
-name: PHP
+name: Build and deploy an app to AKS
 
 on:
   pull_request:

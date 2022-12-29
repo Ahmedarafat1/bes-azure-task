@@ -22,6 +22,7 @@ The following responses are possible:
 3. Docker
 4. Github Actions .
 5. Azure
+6. Prometheus and Grafana
 
 
 ## Terraform Modules:
@@ -69,7 +70,7 @@ The following responses are possible:
 7. variables.tf and terraform.tfvars are terraform variables files 
 
 
-### Build The Environment :
+### Build The Environment Locally :
 
  **Infrastructure**
 
@@ -88,7 +89,7 @@ docker build -t <your container registery>:latest
 docker push <your container registery>:latest
 
 ```
- **AKS_Deplument**
+ **AKS Deplyments**
 
 ```
 az logine 
@@ -96,4 +97,31 @@ az account set --subscription <your subscriptionid>
 az aks get-credentials --resource-group <your resource group> --name <cluster name>
 kubectl apply -f mysql.yaml && kubectl apply -f php.yaml kubectl apply -f secrets.yaml kubectl apply -f data-loader-job.yaml
 
+```
+**AKS_Monitoring**
 
+```
+create -f ./monitoring/setup  #prometheus operator
+create -f ./monitoring/
+
+```
+
+# View Dashboards 
+
+You can access the dashboards by using `port-forward` to access Grafana.
+It does not have a public endpoint for security reasons
+
+```
+kubectl -n monitoring port-forward svc/grafana 3000
+```
+
+Then access Grafana on [localhost:3000](http://localhost:3000/)
+
+
+## Check Prometheus 
+
+we can also check Prometheus:
+
+```
+kubectl -n monitoring port-forward svc/prometheus-operated 9090
+```
